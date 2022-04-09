@@ -1,29 +1,52 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css" />
     <title>Job Search</title>
     <style>
+      body {
+        color: black;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+      }
+      a {
+        color: purple;
+      }
+      h4 {
+        margin-top: 0;
+      }
+
       section {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1em;
+        flex-wrap: nowrap;
+        gap: 2rem;
+      }
+      .job {
+        padding: 2rem 0;
+        border-bottom: 1px solid gray;
       }
     </style>
   </head>
   <body>
-    <h1>Search Results</h1>
-    <h3>Found {{resultsNumber}} results for {{searchBy}}</h3>
+    <h1>Remote Jobs</h1>
+    <h3>{{resultsNumber}} {{searchBy}} jobs found</h3>
     <a href="/export?query={{searchBy}}">Export to CSV</a>
+    <a href="/">← Go back</a>
     <section>
-      <h4>Title</h4>
-      <h4>Company</h4>
-      <h4>Location</h4>
-      <h4>Link</h4>
-      {% for job in jobs %}
-      <span>{{job.title}}</span>
-      <span>{{job.company}}</span>
-      <span>{{job.location}}</span>
-      <a href="{{job.link}}" target="_blank">Apply</a>
+      {% for site in jobs %}
+      <div class="site">
+        <h2>{{site}} ({{jobs[site]|length}})</h2>
+        {% for job in jobs[site] %}
+        <div class="job">
+          <h4>{{job.title}}</h4>
+          <h5>{{job.company}}</h5>
+          <h5>{{job.location}}</h5>
+          <a href="{{job.link}}" target="_blank">Apply</a>
+        </div>
+        {% endfor %}
+      </div>
       {% endfor %}
     </section>
   </body>
