@@ -1,6 +1,7 @@
 import os
 import csv
 import requests
+import re
 from bs4 import BeautifulSoup
 
 os.system("clear")
@@ -26,7 +27,7 @@ for i, superbrand in enumerate(superbrand_info):
     try:
         response = requests.get(superbrand["link"])
         soup = BeautifulSoup(response.text, "html.parser")
-        filename = superbrand["company"].replace("/", "／")
+        filename = re.sub(r"[\\/:*?\"<>|]", "_", superbrand["company"])
     except:
         print(superbrand, "error")
         continue
