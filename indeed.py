@@ -67,6 +67,7 @@ def extract_jobs(last_page, url):
             result = requests.get(f"{url}&start={page * LIMIT}", headers=headers)
             if result.status_code != 200:
                 print("error")
+                return []
         except Exception as e:
             print(e, f"{url}&pg={page + 1}")
             return []
