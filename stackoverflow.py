@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
+
 def get_last_page(url):
     result = requests.get(url)
     soup = BeautifulSoup(result.text, "html.parser")
@@ -15,6 +16,7 @@ def get_last_page(url):
         return 1
 
     return max_page
+
 
 def extract_job(html):
     try:
@@ -35,18 +37,23 @@ def extract_job(html):
         "title": title,
         "company": company,
         "location": location,
-        "link": f"https://stackoverflow.com/jobs/{job_id}/"
+        "link": f"https://stackoverflow.com/jobs/{job_id}/",
     }
+
 
 def extract_jobs(last_page, url):
     jobs = []
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36"
+    }
+
     for page in range(last_page):
-    # for page in range(1):
+        # for page in range(1):
         print(f"Scraping Stackoverflow page {page + 1}")
 
         try:
-            result = requests.get(f"{url}&pg={page + 1}")
-            if (result.status_code != 200):
+            result = requests.get(f"{url}&pg={page + 1}", headers=headers)
+            if result.status_code != 200:
                 print("error", result.status_code)
                 return []
         except Exception as e:
@@ -55,12 +62,13 @@ def extract_jobs(last_page, url):
 
         soup = BeautifulSoup(result.text, "html.parser")
         results = soup.select("div.listResults > div.js-result")
-        
+
         for result in results:
             job = extract_job(result)
             jobs.append(job)
-    
+
     return jobs
+
 
 def get_jobs(query):
     url = f"https://stackoverflow.com/jobs?r=true&q={query}"

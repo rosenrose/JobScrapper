@@ -1,5 +1,6 @@
 import csv
 
+
 def save_to_file(filename, jobs):
     with open(filename, "w", encoding="utf-8") as file:
         writer = csv.writer(file)
