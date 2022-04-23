@@ -18,7 +18,7 @@ from exporter import save_to_file
 from functools import reduce
 import random
 
-app = Flask("SuperScrapper")
+app = Flask(__name__)
 cache = {}
 CSV_NAME = "jobs.csv"
 
@@ -70,4 +70,4 @@ def export():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0")
+    app.run(debug=True)
