@@ -1,42 +1,48 @@
-import requests
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 from urllib.parse import urljoin
 from typing import Final, List, Dict
 
 BASE_URL: Final = "https://www.indeed.com"
 
+service = Service(ChromeDriverManager().install())
+options = webdriver.ChromeOptions()
+options.add_experimental_option("excludeSwitches", ["enable-logging"])
+options.add_argument("--headless")
+
 
 def extract_jobs(query: str, user_agent: str) -> List[Dict[str, str]]:
+    options.add_argument(f"user-agent={user_agent}")
+    driver = webdriver.Chrome(service=service, options=options)
+
     try:
-        response = requests.get(f"{BASE_URL}/jobs?q={query}", headers={"User-Agent": user_agent})
+        driver.get(f"{BASE_URL}/jobs?q={query}")
     except Exception as e:
         print(e)
         return
 
-    if response.status_code != 200:
-        print("request failed")
-        return
-
     job_results = []
-    soup = BeautifulSoup(response.text, "html.parser")
-    input()
-    sections = soup.select("section.jobs")
-    for section in sections:
-        jobs = section.select("li:not(.view-all) > a")
+    soup = BeautifulSoup(driver.page_source, "html.parser")
 
-        for job in jobs:
-            link = urljoin(BASE_URL, job.get("href"))
-            company, time, region = job.select("span.company")
-            title = job.select_one("span.title")
+    jobs = soup.select("ul.jobsearch-ResultsList div.job_seen_beacon")
 
-            job_results.append(
-                {
-                    "company": company.text,
-                    "title": title.text,
-                    "time": time.text,
-                    "region": region.text,
-                    "link": link,
-                }
-            )
+    for job in jobs:
+        # link = urljoin(BASE_URL, job.get("href"))
+        # company, time, region = job.select("span.company")
+        # title = job.select_one("span.title")
 
+        # job_results.append(
+        #     {
+        #         "company": company.text,
+        #         "title": title.text,
+        #         "time": time.text,
+        #         "region": region.text,
+        #         "link": link,
+        #     }
+        # )
+        ...
+
+    driver.quit()
     return job_results
