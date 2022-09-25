@@ -9,10 +9,12 @@
   </head>
   <body>
     <main class="container">
+      <a href="/">&lArr;</a>
       <hgroup>
         <h1>Search Results for {{query}}</h1>
         <a href="/export?query={{query}}&format=csv" target="_blank">Export as CSV</a>
         <a href="/export?query={{query}}&format=json" target="_blank">Export as JSON</a>
+        <a href="/search?query={{query}}&refresh_force">Refresh Query</a>
       </hgroup>
       <figure>
         <table role="grid">
