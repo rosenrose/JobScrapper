@@ -6,9 +6,11 @@ from typing import Final, List, Dict
 BASE_URL: Final = "https://weworkremotely.com"
 
 
-def extract_jobs(query: str) -> List[Dict[str, str]]:
+def extract_jobs(query: str, user_agent: str) -> List[Dict[str, str]]:
     try:
-        response = requests.get(f"{BASE_URL}/remote-jobs/search?term={query}")
+        response = requests.get(
+            f"{BASE_URL}/remote-jobs/search?term={query}", headers={"User-Agent": user_agent}
+        )
     except Exception as e:
         print(e)
         return []
@@ -35,7 +37,7 @@ def extract_jobs(query: str) -> List[Dict[str, str]]:
                     "company": company.text.strip(),
                     "title": title.text.strip(),
                     "time": time.text.strip(),
-                    "region": location.text.strip(),
+                    "location": location.text.strip(),
                     "link": link,
                 }
             )
