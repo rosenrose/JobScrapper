@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Results</title>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css" />
+  </head>
+  <body>
+    <main class="container">
+      <hgroup>
+        <h1>Search Results for {{query}}</h1>
+        <a href="/export?query={{query}}&format=csv" target="_blank">Export as CSV</a>
+        <a href="/export?query={{query}}&format=json" target="_blank">Export as JSON</a>
+      </hgroup>
+      <figure>
+        <table role="grid">
+          <caption>
+            Total: {{jobs | length}}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Company</th>
+              <th scope="col">Title</th>
+              <th scope="col">Time</th>
+              <th scope="col">Location</th>
+              <th scope="col">Link</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for i in range((jobs | length)) %}
+            <tr>
+              <th scope="row">{{i + 1}}</th>
+              <td>{{jobs[i].company}}</td>
+              <td>{{jobs[i].title}}</td>
+              <td>{{jobs[i].time}}</td>
+              <td>{{jobs[i].location}}</td>
+              <td><a href="{{jobs[i].link}}" target="_blank">Link</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </figure>
+    </main>
+  </body>
+</html>

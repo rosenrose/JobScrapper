@@ -5,7 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from urllib.parse import urljoin
-from typing import Final, List, Dict
+from typing import Final
 
 BASE_URL: Final = "https://www.indeed.com"
 MAX_PAGE: Final = 5
@@ -34,7 +34,7 @@ def get_page_count(query: str) -> int:
     return min(page_count, MAX_PAGE)
 
 
-def extract_indeed_jobs(query: str, page: int) -> List[Dict[str, str]]:
+def extract_indeed_jobs(query: str, page: int) -> list[dict[str, str]]:
     try:
         driver.get(f"{BASE_URL}/jobs?q={query}&start={page * 10}")
     except Exception as e:
@@ -72,7 +72,7 @@ def extract_indeed_jobs(query: str, page: int) -> List[Dict[str, str]]:
     return job_results
 
 
-def extract_jobs(query: str, user_agent: str) -> List[Dict[str, str]]:
+def extract_jobs(query: str, user_agent: str) -> list[dict[str, str]]:
     service = Service(ChromeDriverManager().install())
     options = webdriver.ChromeOptions()
     options.add_experimental_option("excludeSwitches", ["enable-logging"])

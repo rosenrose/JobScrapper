@@ -1,12 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-from typing import Final, List, Dict
+from typing import Final
 
 BASE_URL: Final = "https://weworkremotely.com"
 
 
-def extract_jobs(query: str, user_agent: str) -> List[Dict[str, str]]:
+def extract_jobs(query: str, user_agent: str) -> list[dict[str, str]]:
     try:
         response = requests.get(
             f"{BASE_URL}/remote-jobs/search?term={query}", headers={"User-Agent": user_agent}
