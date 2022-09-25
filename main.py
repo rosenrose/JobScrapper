@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 from flask import Flask, render_template, request, redirect, send_file
 from extractors import wwr, indeed
-from export import save_to_csv
+from export import save_to_csv, save_to_json
 from typing import Final
 
 USER_AGENT: Final = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
@@ -55,23 +55,19 @@ def export():
     if (query_key not in cache) or (not format) or (not format.strip()):
         return redirect(f"/search?query={query}")
 
-    filename = f"{query}.{format.lower()}"
     jobs = cache[query_key]
 
     match format.lower():
         case "csv":
-            save_to_csv(filename, jobs)
+            output = save_to_csv(jobs)
         case "json":
-            json.dump(
-                jobs,
-                open(filename, "w", encoding="utf-8"),
-                ensure_ascii=False,
-                indent=2,
-            )
+            output = save_to_json(jobs)
         case _:
             return redirect(f"/search?query={query}")
 
-    return send_file(filename, as_attachment=True)
+    filename = f"{query}.{format.lower()}"
+
+    return send_file(output, download_name=filename, as_attachment=True)
 
 
 if __name__ == "__main__":
