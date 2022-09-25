@@ -11,30 +11,31 @@ def extract_jobs(query: str) -> List[Dict[str, str]]:
         response = requests.get(f"{BASE_URL}/remote-jobs/search?term={query}")
     except Exception as e:
         print(e)
-        return
+        return []
 
     if response.status_code != 200:
         print("request failed")
-        return
+        return []
 
     job_results = []
-    soup = BeautifulSoup(response.text, "html.parser")
 
+    soup = BeautifulSoup(response.text, "html.parser")
     sections = soup.select("section.jobs")
+
     for section in sections:
         jobs = section.select("li:not(.view-all) > a")
 
         for job in jobs:
             link = urljoin(BASE_URL, job.get("href"))
-            company, time, region = job.select("span.company")
+            company, time, location = job.select("span.company")
             title = job.select_one("span.title")
 
             job_results.append(
                 {
-                    "company": company.text,
-                    "title": title.text,
-                    "time": time.text,
-                    "region": region.text,
+                    "company": company.text.strip(),
+                    "title": title.text.strip(),
+                    "time": time.text.strip(),
+                    "region": location.text.strip(),
                     "link": link,
                 }
             )
