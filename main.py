@@ -14,7 +14,7 @@ cache: dict[str, dict] = {}
 if (saved_cache := Path("cache.json")).exists():
     cache = json.load(open(saved_cache, encoding="utf-8"))
 
-app = Flask("JobScrapper")
+app = Flask(__name__)
 
 
 @app.route("/")
