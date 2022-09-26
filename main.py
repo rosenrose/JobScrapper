@@ -87,4 +87,4 @@ def is_ignore_cache(is_refresh_force: bool, query_key: str) -> bool:
 
 
 if __name__ == "__main__":
-    app.run("0.0.0.0", port=os.environ.get("PORT", 5000))
+    app.run("0.0.0.0", port=os.environ.get("PORT", 8080))
