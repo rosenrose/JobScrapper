@@ -11,6 +11,12 @@ BASE_URL: Final = "https://www.indeed.com"
 MAX_PAGE: Final = 5
 
 driver: webdriver.Chrome = None
+service = Service(ChromeDriverManager().install())
+options = webdriver.ChromeOptions()
+options.add_experimental_option("excludeSwitches", ["enable-logging"])
+options.add_argument("--headless")
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
 
 location_regex = re.compile(r"[+]\d+\s*location[s]?")
 metadata_regex = re.compile(r"[+]\d+")
@@ -73,11 +79,8 @@ def extract_indeed_jobs(query: str, page: int) -> list[dict[str, str]]:
 
 
 def extract_jobs(query: str, user_agent: str) -> list[dict[str, str]]:
-    service = Service(ChromeDriverManager().install())
-    options = webdriver.ChromeOptions()
-    options.add_experimental_option("excludeSwitches", ["enable-logging"])
-    options.add_argument("--headless")
     options.add_argument(f"user-agent={user_agent}")
+
     global driver
     driver = webdriver.Chrome(service=service, options=options)
 
