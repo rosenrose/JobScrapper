@@ -29,7 +29,13 @@ def extract_jobs(query: str, user_agent: str) -> list[dict[str, str]]:
 
         for job in jobs:
             link = urljoin(BASE_URL, job.get("href"))
-            company, time, location = job.select("span.company")
+
+            try:
+                company, time, location = job.select("span.company")
+            except:
+                company, time = job.select("span.company")
+                location = None
+
             title = job.select_one("span.title")
 
             job_results.append(
@@ -37,7 +43,7 @@ def extract_jobs(query: str, user_agent: str) -> list[dict[str, str]]:
                     "company": company.text.strip(),
                     "title": title.text.strip(),
                     "time": time.text.strip(),
-                    "location": location.text.strip(),
+                    "location": location.text.strip() if location else "",
                     "link": link,
                 }
             )
